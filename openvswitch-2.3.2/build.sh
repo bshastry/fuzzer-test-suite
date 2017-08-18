@@ -6,7 +6,7 @@
 build_lib() {
   rm -rf BUILD
   cp -rf SRC BUILD
-  (cd BUILD && CC="$CC" CFLAGS="$CFLAGS" ./configure && make -j $JOBS)
+  (cd BUILD && ./boot.sh && CC="$CC" CFLAGS="$CFLAGS" ./configure && make -j $JOBS)
 }
 
 get_git_tag https://github.com/openvswitch/ovs.git v2.3.2 SRC
