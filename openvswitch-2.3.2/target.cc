@@ -2,7 +2,7 @@
 #include <string.h>
 #include <errno.h>
 #include "flow.h"
-#include "ofpbuf.h"
+//#include "ofpbuf.h"
 #include "pcap-file.h"
 
 void write_pcap_header(unsigned int *buf) {
