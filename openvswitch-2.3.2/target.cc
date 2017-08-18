@@ -1,10 +1,12 @@
 #include <stdio.h>
 #include <string.h>
+#include <errno.h>
 #include "flow.h"
 #include "ofpbuf.h"
 #include "pcap-file.h"
 
 extern "C" int LLVMFuzzerTestOneInput(const uint8_t* data, size_t size) {
+  int retval;
   FILE *pcap;
   struct flow flow;
   struct ofpbuf *packet;
@@ -16,7 +18,7 @@ extern "C" int LLVMFuzzerTestOneInput(const uint8_t* data, size_t size) {
   (unsigned int *)t[4] = 65535; /* snaplen */
   (unsigned int *)t[5] = 1;     /* eth */
   for (size_t i = 0 ; i < size; i++) {
-    (uint8_t *)t[24+i] = data[i];
+    t[24+i] = data[i];
   }
   fwrite(t, 1, sizeof(t), "test.pcap");
   pcap = fopen("test.pcap", "rb");
