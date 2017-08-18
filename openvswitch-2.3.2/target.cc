@@ -2,8 +2,10 @@
 #include <string.h>
 #include <errno.h>
 #include "flow.h"
-//#include "ofpbuf.h"
 #include "pcap-file.h"
+
+extern void flow_extract(struct ofpbuf *, const struct pkt_metadata *md, struct flow *);
+
 
 void write_pcap_header(unsigned int *buf) {
   buf[0] = 0xa1b2c3d4; /* magic */
