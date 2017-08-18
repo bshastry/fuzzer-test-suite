@@ -13,4 +13,4 @@ get_git_tag https://github.com/openvswitch/ovs.git v2.3.2 SRC
 build_lib
 build_fuzzer
 set -x
-$CXX $CXXFLAGS $SCRIPT_DIR/target.cc -I BUILD -I BUILD/lib/ -I BUILD/include/ BUILD/lib/.libs/libopenvswitch.a $LIB_FUZZING_ENGINE -lz -lssl -lcrypto -o $EXECUTABLE_NAME_BASE
+$CXX $CXXFLAGS $SCRIPT_DIR/target.cc -I BUILD -I BUILD/lib/ -I BUILD/include/ BUILD/lib/.libs/libopenvswitch.a $LIB_FUZZING_ENGINE -lz -lssl -lcrypto -latomic -o $EXECUTABLE_NAME_BASE
