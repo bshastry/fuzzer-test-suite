@@ -4,7 +4,7 @@
 #include "flow.h"
 #include "pcap-file.h"
 
-extern void flow_extract(struct ofpbuf *, const struct pkt_metadata *md, struct flow *);
+extern "C" void flow_extract(struct ofpbuf *, const struct pkt_metadata *md, struct flow *);
 
 
 void write_pcap_header(unsigned int *buf) {
