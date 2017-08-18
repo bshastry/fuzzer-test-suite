@@ -20,7 +20,9 @@ extern "C" int LLVMFuzzerTestOneInput(const uint8_t* data, size_t size) {
   for (size_t i = 0 ; i < size; i++) {
     t[24+i] = data[i];
   }
-  fwrite(t, 1, sizeof(t), "test.pcap");
+  pcap = fopen ("test.pcap", "wb");
+  fwrite(t, 1, sizeof(t), pcap);
+  fclose(pcap);
   pcap = fopen("test.pcap", "rb");
   if (!pcap) {
         ovs_fatal(errno, "failed to open %s for reading", "test.pcap");
