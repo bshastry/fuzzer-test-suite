@@ -5,18 +5,22 @@
 #include "ofpbuf.h"
 #include "pcap-file.h"
 
+void write_pcap_header(unsigned int *buf) {
+  buf[0] = 0xa1b2c3d4; /* magic */
+  buf[1] = 0x00040002; /* version */
+  buf[2] = 0; /* thiszone */
+  buf[3] = 0; /* sigfigs */
+  buf[4] = 65535; /* snaplen */
+  buf[5] = 1;     /* eth */
+}
+
 extern "C" int LLVMFuzzerTestOneInput(const uint8_t* data, size_t size) {
   int retval;
   FILE *pcap;
   struct flow flow;
   struct ofpbuf *packet;
   uint8_t t[size+24];
-  (unsigned int *)t[0] = 0xa1b2c3d4; /* magic */
-  (unsigned int *)t[1] = 0x00040002; /* version */
-  (unsigned int *)t[2] = 0; /* thiszone */
-  (unsigned int *)t[3] = 0; /* sigfigs */
-  (unsigned int *)t[4] = 65535; /* snaplen */
-  (unsigned int *)t[5] = 1;     /* eth */
+  write_pcap_header((unsigned int *)t);
   for (size_t i = 0 ; i < size; i++) {
     t[24+i] = data[i];
   }
