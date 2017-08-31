@@ -1,11 +1,11 @@
 #include <stdio.h>
 #include <string.h>
 #include <errno.h>
+#include <unistd.h>
 #include "flow.h"
 #include "pcap-file.h"
 
-extern "C" void flow_extract(struct ofpbuf *, const struct pkt_metadata *md, struct flow *);
-
+void flow_extract(struct ofpbuf *, const struct pkt_metadata *md, struct flow *);
 
 void write_pcap_header(unsigned int *buf) {
   buf[0] = 0xa1b2c3d4; /* magic */
@@ -13,40 +13,48 @@ void write_pcap_header(unsigned int *buf) {
   buf[2] = 0; /* thiszone */
   buf[3] = 0; /* sigfigs */
   buf[4] = 65535; /* snaplen */
-  buf[5] = 1;     /* eth */
+//  buf[5] = 1;     /* eth */
 }
 
-extern "C" int LLVMFuzzerTestOneInput(const uint8_t* data, size_t size) {
+void cleanup(FILE *fh) {
+  fclose(fh);
+  unlink("test.pcap");
+}
+
+int LLVMFuzzerTestOneInput(const uint8_t* data, size_t size) {
   int retval;
   FILE *pcap;
   struct flow flow;
   struct ofpbuf *packet;
-  uint8_t t[size+24];
+  uint8_t t[size+20];
   write_pcap_header((unsigned int *)t);
   for (size_t i = 0 ; i < size; i++) {
-    t[24+i] = data[i];
+    t[20+i] = data[i];
   }
   pcap = fopen ("test.pcap", "wb");
   fwrite(t, 1, sizeof(t), pcap);
   fclose(pcap);
   pcap = fopen("test.pcap", "rb");
-  if (!pcap) {
-        ovs_fatal(errno, "failed to open %s for reading", "test.pcap");
-  }
 
   retval = ovs_pcap_read_header(pcap);
   if (retval) {
-        ovs_fatal(retval > 0 ? retval : 0, "reading pcap header failed");
+//        ovs_fatal(retval > 0 ? retval : 0, "reading pcap header failed");
+	cleanup(pcap);
+	return 0;
   }
 
   retval = ovs_pcap_read(pcap, &packet, NULL);
   if (retval == EOF) {
-    ovs_fatal(0, "unexpected end of file reading pcap file");
+//    ovs_fatal(0, "unexpected end of file reading pcap file");
+	cleanup(pcap);
+	return 0;
   } else if (retval) {
-    ovs_fatal(retval, "error reading pcap file");
+//    ovs_fatal(retval, "error reading pcap file");
+	cleanup(pcap);
+	return 0;
   }
 
   flow_extract(packet, NULL, &flow);
-  unlink("test.pcap"); 
+  cleanup(pcap);
   return 0;
 }
