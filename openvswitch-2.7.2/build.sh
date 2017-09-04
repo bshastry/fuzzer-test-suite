@@ -6,7 +6,7 @@
 build_lib() {
   rm -rf BUILD
   cp -rf SRC BUILD
-  (cd BUILD && ./boot.sh && ./configure && make -j $JOBS)
+  (cd BUILD && libtoolize --force && ./boot.sh && ./configure && make -j $JOBS)
 }
 
 get_git_tag https://github.com/openvswitch/ovs.git v2.7.2 SRC
@@ -19,3 +19,5 @@ $CC $CFLAGS -c -g $SCRIPT_DIR/target-ofp.c -I BUILD -I BUILD/lib -I BUILD/includ
 $CXX $CXXFLAGS target-ofp.o BUILD/lib/.libs/libopenvswitch.a -lz -lssl -lcrypto -latomic $LIB_FUZZING_ENGINE -o $EXECUTABLE_NAME_BASE-ofp
 $CC $CFLAGS -c -g $SCRIPT_DIR/target-ct.c -I BUILD -I BUILD/lib -I BUILD/include
 $CXX $CXXFLAGS target-ct.o BUILD/lib/.libs/libopenvswitch.a -lz -lssl -lcrypto -latomic $LIB_FUZZING_ENGINE -o $EXECUTABLE_NAME_BASE-ct
+$CC $CFLAGS -c -g $SCRIPT_DIR/target-jsonp.c -I BUILD -I BUILD/lib -I BUILD/include
+$CXX $CXXFLAGS target-jsonp.o BUILD/lib/.libs/libopenvswitch.a -lz -lssl -lcrypto -latomic $LIB_FUZZING_ENGINE -o $EXECUTABLE_NAME_BASE-jsonp
