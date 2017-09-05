@@ -6,12 +6,12 @@
 build_lib() {
   rm -rf BUILD
   cp -rf SRC BUILD
-  (cd BUILD && ./configure && make -j $JOBS)
+  (cd BUILD && ./autogen.sh && ./configure --disable-shared && make -j $JOBS)
 }
 
 get_git_tag https://git.savannah.gnu.org/git/osip.git 5.0.0 SRC
 build_lib
 build_fuzzer
 set -x
-$CC $CFLAGS -c -g $SCRIPT_DIR/target-sipp.c -I include
-$CXX $CXXFLAGS target-sipp.o BUILD/src/osipparser2/libosipparser2.a $LIB_FUZZING_ENGINE -o $EXECUTABLE_NAME_BASE
+$CC $CFLAGS -c -g $SCRIPT_DIR/target-sipp.c -I BUILD/include
+$CXX $CXXFLAGS target-sipp.o BUILD/src/osipparser2/.libs/libosipparser2.a $LIB_FUZZING_ENGINE -o $EXECUTABLE_NAME_BASE
