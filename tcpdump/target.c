@@ -26,14 +26,13 @@ void printert_init(netdissect_options *ndo) {
     // Don't convert address to names AND verbose output
     ++ndo->ndo_nflag;
     ++ndo->ndo_vflag;
+    ndo->ndo_if_printer = get_if_printer(ndo, DLT_EN10MB);
 }
 #endif
 
 int LLVMFuzzerTestOneInput(const uint8_t* data, size_t size)
 {
     struct pcap_pkthdr h;
-    int dlt = 0;
-    if_printer printer;
 #ifdef SWITCH
     netdissect_options Ndo;
     char ebuf[PCAP_ERRBUF_SIZE];
@@ -50,18 +49,8 @@ int LLVMFuzzerTestOneInput(const uint8_t* data, size_t size)
     h.len = size;
     h.ts = (struct timeval){0};
     
-    // Get datalink type for printer and print packet
-//    dlt = ntohs((const uint16_t *)data[12]);
-    // Hard-coded data linktype
-    dlt = DLT_EN10MB;
-//    printer = lookup_printer(dlt);
-//    if (printer == NULL)
-//	return 0;
-
-    ndo->ndo_if_printer = get_if_printer(ndo, dlt);
     pretty_print_packet(ndo, &h, data, 1);
 
-    nd_cleanup();
     return 0;
 }
 
@@ -81,6 +70,7 @@ LLVMFuzzerInitialize(int *argc, char ***argv)
     // Don't convert address to names AND verbose output
     ++ndo->ndo_nflag;
     ++ndo->ndo_vflag;
+    ndo->ndo_if_printer = get_if_printer(ndo, DLT_EN10MB);
     return 0;
 }
 #endif

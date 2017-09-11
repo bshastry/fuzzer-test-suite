@@ -15,8 +15,8 @@ build_fuzzer
 set -x
 $CC $CFLAGS -c -g $SCRIPT_DIR/target.c -I BUILD -I BUILD/lib -I BUILD/include
 $CXX $CXXFLAGS target.o BUILD/lib/.libs/libopenvswitch.a -lz -lssl -lcrypto -latomic $LIB_FUZZING_ENGINE -o $EXECUTABLE_NAME_BASE
-$CC $CFLAGS -c -g $SCRIPT_DIR/target-ofp.c -I BUILD -I BUILD/lib -I BUILD/include
-$CXX $CXXFLAGS target-ofp.o BUILD/lib/.libs/libopenvswitch.a -lz -lssl -lcrypto -latomic $LIB_FUZZING_ENGINE -o $EXECUTABLE_NAME_BASE-ofp
+$CC $CFLAGS -c -g $SCRIPT_DIR/target-ofpl.c -I BUILD -I BUILD/lib -I BUILD/include
+$CXX $CXXFLAGS target-ofpl.o BUILD/lib/.libs/libopenvswitch.a -lz -lssl -lcrypto -latomic $LIB_FUZZING_ENGINE -o $EXECUTABLE_NAME_BASE-ofp
 $CC $CFLAGS -c -g $SCRIPT_DIR/target-ct.c -I BUILD -I BUILD/lib -I BUILD/include
 $CXX $CXXFLAGS target-ct.o BUILD/lib/.libs/libopenvswitch.a -lz -lssl -lcrypto -latomic $LIB_FUZZING_ENGINE -o $EXECUTABLE_NAME_BASE-ct
 $CC $CFLAGS -c -g $SCRIPT_DIR/target-jsonp.c -I BUILD -I BUILD/lib -I BUILD/include
