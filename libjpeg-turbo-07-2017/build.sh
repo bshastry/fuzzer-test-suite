@@ -9,7 +9,7 @@ build_lib() {
   (cd BUILD && autoreconf -fiv && ./configure && make -j $JOBS)
 }
 
-get_git_revision https://github.com/libjpeg-turbo/libjpeg-turbo.git b0971e47d76fdb81270e93bbf11ff5558073350d SRC
+get_git_tag https://github.com/libjpeg-turbo/libjpeg-turbo.git 1.5.2 SRC
 build_lib
 build_fuzzer
 set -x
