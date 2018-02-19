@@ -1,0 +1,16 @@
+diff --git a/lib/odp-util.c b/lib/odp-util.c
+index 45a890c46aa0..b7b6a2a9a785 100644
+--- a/lib/odp-util.c
++++ b/lib/odp-util.c
+@@ -3497,8 +3497,9 @@ generate_all_wildcard_mask(const struct attr_len_tbl tbl[], int max,
+         size_t nested_mask;
+ 
+         if (tbl[type].next) {
+-            tbl = tbl[type].next;
+-            max = tbl[type].next_max;
++            const struct attr_len_tbl *entry = &tbl[type];
++            tbl = entry->next;
++            max = entry->next_max;
+         }
+ 
+         nested_mask = nl_msg_start_nested(ofp, type);

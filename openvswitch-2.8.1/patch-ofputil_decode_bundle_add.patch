@@ -1,0 +1,14 @@
+diff --git a/lib/ofp-util.c b/lib/ofp-util.c
+index 86dd5cb61653..e915cb2ab2d7 100644
+--- a/lib/ofp-util.c
++++ b/lib/ofp-util.c
+@@ -10517,6 +10517,9 @@ ofputil_decode_bundle_add(const struct ofp_header *oh,
+     msg->bundle_id = ntohl(m->bundle_id);
+     msg->flags = ntohs(m->flags);
+ 
++    if (b.size < sizeof(struct ofp_header)) {
++        return OFPERR_OFPBFC_MSG_BAD_LEN;
++    }
+     msg->msg = b.data;
+     if (msg->msg->version != oh->version) {
+         return OFPERR_OFPBFC_BAD_VERSION;

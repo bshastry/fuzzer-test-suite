@@ -1,0 +1,29 @@
+diff --git a/lib/odp-util.c b/lib/odp-util.c
+index 45a890c46aa0..3e30b9ae7719 100644
+--- a/lib/odp-util.c
++++ b/lib/odp-util.c
+@@ -1870,6 +1870,8 @@ parse_odp_encap_nsh_action(const char *s, struct ofpbuf *actions)
+             }
+             continue;
+         }
++
++        return -EINVAL;
+     }
+ out:
+     if (ret < 0) {
+diff --git a/tests/odp.at b/tests/odp.at
+index cd01b32d72ef..1a80322890eb 100644
+--- a/tests/odp.at
++++ b/tests/odp.at
+@@ -362,3 +362,11 @@ AT_CHECK_UNQUOTED([ovstest test-odp parse-actions < actions.txt], [0],
+   [`cat actions.txt`
+ ])
+ AT_CLEANUP
++
++AT_SETUP([OVS datapath actions parsing and formatting - invalid forms])
++dnl This caused a hang in older versions.
++AT_CHECK([echo 'encap_nsh@:{@' | ovstest test-odp parse-actions
++], [0], [dnl
++odp_actions_from_string: error
++])
++AT_CLEANUP

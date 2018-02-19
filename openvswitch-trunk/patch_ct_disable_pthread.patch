@@ -1,0 +1,53 @@
+--- lib/conntrack.c	2017-12-09 12:47:31.255294531 +0100
++++ lib/conntrack-new.c	2017-12-09 12:49:08.888487241 +0100
+@@ -312,7 +312,7 @@
+     atomic_count_init(&ct->n_conn, 0);
+     atomic_init(&ct->n_conn_limit, DEFAULT_N_CONN_LIMIT);
+     latch_init(&ct->clean_thread_exit);
+-    ct->clean_thread = ovs_thread_create("ct_clean", clean_thread_main, ct);
++//    ct->clean_thread = ovs_thread_create("ct_clean", clean_thread_main, ct);
+ }
+ 
+ /* Destroys the connection tracker 'ct' and frees all the allocated memory. */
+@@ -322,7 +322,8 @@
+     unsigned i;
+ 
+     latch_set(&ct->clean_thread_exit);
+-    pthread_join(ct->clean_thread, NULL);
++//    pthread_join(ct->clean_thread, NULL);
++    clean_thread_main(ct);
+     latch_destroy(&ct->clean_thread_exit);
+     for (i = 0; i < CONNTRACK_BUCKETS; i++) {
+         struct conntrack_bucket *ctb = &ct->buckets[i];
+@@ -1412,20 +1413,20 @@
+ {
+     struct conntrack *ct = f_;
+ 
+-    while (!latch_is_set(&ct->clean_thread_exit)) {
++//    while (!latch_is_set(&ct->clean_thread_exit)) {
+         long long next_wake;
+         long long now = time_msec();
+-
++//
+         next_wake = conntrack_clean(ct, now);
+-
+-        if (next_wake < now) {
+-            poll_timer_wait_until(now + CT_CLEAN_MIN_INTERVAL);
+-        } else {
+-            poll_timer_wait_until(MAX(next_wake, now + CT_CLEAN_INTERVAL));
+-        }
+-        latch_wait(&ct->clean_thread_exit);
+-        poll_block();
+-    }
++//
++//        if (next_wake < now) {
++//            poll_timer_wait_until(now + CT_CLEAN_MIN_INTERVAL);
++//        } else {
++//            poll_timer_wait_until(MAX(next_wake, now + CT_CLEAN_INTERVAL));
++//        }
++//        latch_wait(&ct->clean_thread_exit);
++//        poll_block();
++//    }
+ 
+     return NULL;
+ }

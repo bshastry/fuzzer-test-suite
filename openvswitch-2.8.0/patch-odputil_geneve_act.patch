@@ -1,0 +1,13 @@
+diff --git a/lib/odp-util.c b/lib/odp-util.c
+index 45a890c46aa0..13880b0749ee 100644
+--- a/lib/odp-util.c
++++ b/lib/odp-util.c
+@@ -1962,7 +1962,7 @@ parse_odp_action(const char *s, const struct simap *port_names,
+     if (!strncmp(s, "set(", 4)) {
+         size_t start_ofs;
+         int retval;
+-        struct nlattr mask[128 / sizeof(struct nlattr)];
++        struct nlattr mask[1024 / sizeof(struct nlattr)];
+         struct ofpbuf maskbuf;
+         struct nlattr *nested, *key;
+         size_t size;

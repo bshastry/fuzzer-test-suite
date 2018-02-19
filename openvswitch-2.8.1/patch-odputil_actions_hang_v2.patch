@@ -1,0 +1,14 @@
+diff --git a/lib/odp-util.c b/lib/odp-util.c
+index 3e30b9ae7719..23d5a01b3bc7 100644
+--- a/lib/odp-util.c
++++ b/lib/odp-util.c
+@@ -1867,8 +1867,8 @@ parse_odp_encap_nsh_action(const char *s, struct ofpbuf *actions)
+                 }
+                 encap_nsh.mdlen = mdlen + padding;
+                 ofpbuf_uninit(&b);
++                continue;
+             }
+-            continue;
+         }
+ 
+         return -EINVAL;
